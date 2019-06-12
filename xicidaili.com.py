@@ -29,25 +29,25 @@ def rtn_proxy_list(url):
 
     proxyInfoListArr = []
 
-    rtnHtmlContent = chrome_get_html_all_content(url, "proxy__t")
+    rtnHtmlContent = chrome_get_html_all_content(url, "ip_list")
     soup = BeautifulSoup(rtnHtmlContent, 'html.parser')
-    proxyInfoList = soup.find_all(name="table", attrs={"class": "proxy__t"})[0].find_all(name="tr")
+    proxyInfoList = soup.find_all(name="table", attrs={"id": "ip_list"})[0].find_all(name="tr")
 
     for proxyInfo in proxyInfoList:
 
         proxyInfoDict = OrderedDict()
         # ipAddr, port, country, proxyType, anonymity = prox
-        if "adress" in str(proxyInfo):
+        if "IP" in str(proxyInfo):
             continue
 
         # print(str(proxyInfo))
 
-        proxyInfoDict["ipaddress"] = proxyInfo(name="td")[0].text
-        proxyInfoDict["port"] = proxyInfo(name="td")[1].text
-        proxyInfoDict["country"] = proxyInfo(name="td")[2].text.strip()
-        proxyInfoDict["country"] = proxyInfoDict["country"].replace('"', "")
-        proxyInfoDict["country"] = proxyInfoDict["country"].replace('  ', " ")
-        proxyInfoDict["type"] = proxyInfo(name="td")[4].text.lower() # 改为小写
+        proxyInfoDict["ipaddress"] = proxyInfo(name="td")[1].text
+        proxyInfoDict["port"] = proxyInfo(name="td")[2].text
+        proxyInfoDict["country"] = proxyInfo(name="td")[3].text.strip()
+        # proxyInfoDict["country"] = proxyInfoDict["country"].replace('"', "")
+        # proxyInfoDict["country"] = proxyInfoDict["country"].replace('  ', " ")
+        proxyInfoDict["type"] = proxyInfo(name="td")[5].text.lower() # 改为小写
         proxyInfoListArr.append(proxyInfoDict)
 
     return proxyInfoListArr
@@ -113,20 +113,16 @@ def get_html_all_content(url, pageFlag, encode, proxyInfoDict):
 if __name__ == '__main__':
 
     '''
-    https://hidemyna.me/en/proxy-list/#list
-    https://hidemyna.me/en/proxy-list/?start=128#list
+    https://www.xicidaili.com/nn/1
+    https://www.xicidaili.com/nt/1
     '''
 
     # 每次调用页面返回的数量为64
     pagMaxNumOfTimes = 10
     urlList = []
-    for i in range(0, pagMaxNumOfTimes):
-        rtnProxyNum = 64 * i
-
-        if rtnProxyNum == 0 :
-            urlList.append("https://hidemyna.me/en/proxy-list/{0}#list".format(""))
-        else:
-            urlList.append("https://hidemyna.me/en/proxy-list/?start={0}#list".format(rtnProxyNum))
+    for i in range(1, pagMaxNumOfTimes):
+        urlList.append("https://www.xicidaili.com/nn/{0}".format(i ))
+        urlList.append("https://www.xicidaili.com/nt/{0}".format(i ))
 
     for url in urlList:
         proxyInfoListArr = rtn_proxy_list(url)
@@ -153,7 +149,7 @@ if __name__ == '__main__':
             if len(rtnCnt) == 1:
                 continue
 
-            sqlStr = "INSERT INTO `v2PySql`.`proxy_list` (`country`, `ip`, `port`, `addr`, `type`, `is_ok`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 'Y');".format(
+            sqlStr = "INSERT INTO `v2PySql`.`proxy_list` (`country`, `ip`, `port`, `addr`, `type`, `is_ok`, `weights`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 'Y', 0);".format(
                 proxyInfoDict["country"],
                 proxyInfoDict["ipaddress"],
                 proxyInfoDict["port"],

@@ -24,6 +24,9 @@ mysqlExe = torndb.Connection(
     password = PARAINFO["USER_PWD"],
 )
 
+'''
+mv /share/CACHEDEV1_DATA/Datas/Bad_Item/Torrent_By_1024/00.Collection/* /share/CACHEDEV1_DATA/Datas/Bad_Item/Torrent_By_1024/01.归档目录/
+'''
 
 def rtn_proxy_list(url):
 
@@ -153,14 +156,14 @@ if __name__ == '__main__':
             if len(rtnCnt) == 1:
                 continue
 
-            sqlStr = "INSERT INTO `v2PySql`.`proxy_list` (`country`, `ip`, `port`, `addr`, `type`, `is_ok`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 'Y');".format(
+            sqlStr = "INSERT INTO `v2PySql`.`proxy_list` (`country`, `ip`, `port`, `addr`, `type`, `is_ok`, `weights`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 'Y', 0);".format(
                 proxyInfoDict["country"],
                 proxyInfoDict["ipaddress"],
                 proxyInfoDict["port"],
                 "",
                 proxyInfoDict["type"],
             )
-
+            # print(sqlStr)
             mysqlExe.execute(sqlStr)
 
             print("{0} {1} {2} 成功！！".format(proxyInfoDict["type"], proxyInfoDict["ipaddress"],proxyInfoDict["port"]))
