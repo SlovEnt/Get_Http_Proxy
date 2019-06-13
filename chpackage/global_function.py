@@ -135,6 +135,44 @@ def chrome_get_html_all_content(url, pageFlag):
             time.sleep(5)
     return html
 
+def get_html_all_content_proxy(url, pageFlag, encode, proxyInfoDict):
+    '''
+    :param url:  网址
+    :param pageFlag: 爬取页面标识（特征，确认正确获取页面）
+    :return:
+    '''
+    # time.sleep(2)
+    getFlag = False
+    n = 0
+    html = "-----------------"
+    while getFlag == False:
+        try:
+            n += 1
+
+            headers = get_new_headers(url)
+
+            proxies = {proxyInfoDict["type"]: '{0}://{1}:{2}'.format(proxyInfoDict["type"], proxyInfoDict["ip"], proxyInfoDict["port"])}
+            # print(proxies)
+
+            r = requests.get(url=url, headers=headers, timeout=30, verify=False, proxies=proxies)
+            r.raise_for_status()
+
+            html = r.content.decode(encode, 'ignore')
+
+            if pageFlag not in html:
+                  raise Exception("页面内容获取失败！！")
+            else:
+                getFlag = True
+
+        except Exception as e:
+            print(url, e)
+            print(html)
+            if n > 3 :
+                getFlag = False
+                time.sleep(5)
+            else:
+                getFlag = True
+    return html
 
 
 

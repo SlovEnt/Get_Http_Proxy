@@ -3,7 +3,9 @@ __author__ = 'SlovEnt'
 __date__ = '2019/6/2 21:54'
 
 from bs4 import BeautifulSoup
-from chpackage.global_function import get_html_all_content
+from chpackage.global_function import get_html_all_content_proxy
+from collections import OrderedDict
+import time
 
 # 从数据库获取代理
 
@@ -14,7 +16,7 @@ class chs_proxy(object):
 
     def verifi_proxy_webmasterhome(self, proxyInfoDict):
         verifiUrl = "http://ip.webmasterhome.cn/"
-        rtnHtmlContent = get_html_all_content(verifiUrl, "本机IP地址", "UTF-8", proxyInfoDict)
+        rtnHtmlContent = get_html_all_content_proxy(verifiUrl, "本机IP地址", "UTF-8", proxyInfoDict)
         # print(rtnHtmlContent)
         if "本机IP地址" in rtnHtmlContent:
             soup = BeautifulSoup(rtnHtmlContent, 'html.parser')
@@ -81,3 +83,13 @@ class chs_proxy(object):
             print(e)
             return False
 
+def generate_db_proxy_list_dict():
+    proxyInfoDict = OrderedDict()
+    proxyInfoDict["ip"] = " "
+    proxyInfoDict["port"] = " "
+    proxyInfoDict["type"] = " "
+    proxyInfoDict["country"] = " "
+    proxyInfoDict["addr"] = " "
+    proxyInfoDict["weights"] = 0
+    proxyInfoDict["is_ok"] = "Y"
+    return proxyInfoDict
