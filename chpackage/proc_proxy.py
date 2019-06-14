@@ -83,13 +83,13 @@ class chs_proxy(object):
             print(e)
             return False
 
-def generate_db_proxy_list_dict():
-    proxyInfoDict = OrderedDict()
-    proxyInfoDict["ip"] = " "
-    proxyInfoDict["port"] = " "
-    proxyInfoDict["type"] = " "
-    proxyInfoDict["country"] = " "
-    proxyInfoDict["addr"] = " "
-    proxyInfoDict["weights"] = 0
-    proxyInfoDict["is_ok"] = "Y"
-    return proxyInfoDict
+    def generate_db_proxy_list_dict(self):
+        proxyInfoDict = OrderedDict()
+        proxyInfoDict["ip"] = " "
+        proxyInfoDict["port"] = " "
+        proxyInfoDict["type"] = " "
+        proxyInfoDict["country"] = " "
+        proxyInfoDict["addr"] = " "
+        proxyInfoDict["weights"] = 0
+        proxyInfoDict["is_ok"] = "Y"
+        return proxyInfoDict

@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 from chpackage.global_function import chrome_get_html_all_content, get_new_headers, get_html_all_content_proxy
-from chpackage.proc_proxy import generate_db_proxy_list_dict, chs_proxy
+from chpackage.proc_proxy import chs_proxy
 from chpackage import torndb
 import traceback
 
@@ -39,7 +39,7 @@ def txt_main():
     with open(filePath, mode="r", encoding="utf-8") as f:
         proxyInfoList = f.readlines()
         for proxyInfo in proxyInfoList:
-            proxyInfoDict = generate_db_proxy_list_dict()
+            proxyInfoDict = chsp.generate_db_proxy_list_dict()
             proxyInfo = proxyInfo.strip()
             proxyInfo = proxyInfo.split(":")
             proxyInfoDict["ip"] = proxyInfo[0]
