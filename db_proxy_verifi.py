@@ -35,7 +35,7 @@ def main():
         # print(proxyInfo)
         isOk = chsp.verifi_proxy_ipip(proxyInfo)
         if isOk is not True:
-            print("{0} {1} {2} 失败。失败次数为：{4}。返回IP为：{3}。".format(
+            print("{0} {1} {2} 校验失败，失败次数为：{4}，返回IP为：{3}。".format(
                 proxyInfo["type"],
                 proxyInfo["ip"],
                 proxyInfo["port"],
@@ -43,6 +43,13 @@ def main():
                 proxyInfo["weights"]
             ))
             continue
+
+        print("{0} {1} {2} 校验成功，返回IP为：{3}。".format(
+            proxyInfo["type"],
+            proxyInfo["ip"],
+            proxyInfo["port"],
+            isOk,
+        ))
 
 
 

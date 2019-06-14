@@ -35,6 +35,8 @@ class chs_proxy(object):
         verifiUrl = "https://www.ipip.net/ip.html"
         rtnHtmlContent = get_html_all_content_proxy(verifiUrl, 'name="ip"', "UTF-8", proxyInfoDict)
 
+        # print("----------------------{0}\n----------------------".format(rtnHtmlContent))
+
         if 'name="ip"' in rtnHtmlContent:
             soup = BeautifulSoup(rtnHtmlContent, 'html.parser')
             localIpaddress = soup.find_all(name="input")[0]["value"]
@@ -108,3 +110,6 @@ class chs_proxy(object):
         proxyInfoDict["weights"] = 0
         proxyInfoDict["is_ok"] = "Y"
         return proxyInfoDict
+
+    def print_verifi_results(self, proxyInfoDict, resultsStr):
+        pass
