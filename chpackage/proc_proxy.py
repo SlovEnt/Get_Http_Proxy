@@ -31,10 +31,25 @@ class chs_proxy(object):
         else:
             return localIpaddress
 
+    def verifi_proxy_ipip(self, proxyInfoDict):
+        verifiUrl = "https://www.ipip.net/ip.html"
+        rtnHtmlContent = get_html_all_content_proxy(verifiUrl, 'name="ip"', "UTF-8", proxyInfoDict)
+
+        if 'name="ip"' in rtnHtmlContent:
+            soup = BeautifulSoup(rtnHtmlContent, 'html.parser')
+            localIpaddress = soup.find_all(name="input")[0]["value"]
+        else:
+            localIpaddress = "127.0.0.1"
+
+        if proxyInfoDict["ip"] == localIpaddress:
+            return True
+        else:
+            return localIpaddress
+
     def get_proxy_list(self):
         try:
             rtnDate = []
-            sqlStr = "select ip, port, type from proxy_list where is_ok='Y' and weights<10 ORDER BY weights"
+            sqlStr = "select ip, `port`, type, country, addr, weights, is_ok from proxy_list where is_ok='Y' ORDER BY weights"
             rtnDate = self.mysqlExe.query(sqlStr)
             return rtnDate
         except Exception as e:

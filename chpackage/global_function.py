@@ -151,10 +151,14 @@ def get_html_all_content_proxy(url, pageFlag, encode, proxyInfoDict):
 
             headers = get_new_headers(url)
 
-            proxies = {proxyInfoDict["type"]: '{0}://{1}:{2}'.format(proxyInfoDict["type"], proxyInfoDict["ip"], proxyInfoDict["port"])}
+            proxies = {proxyInfoDict["type"]: '{0}://{1}:{2}'.format(
+                proxyInfoDict["type"],
+                proxyInfoDict["ip"],
+                proxyInfoDict["port"]
+            )}
             # print(proxies)
-
             r = requests.get(url=url, headers=headers, timeout=30, verify=False, proxies=proxies)
+            # r = requests.get(url=url, headers=headers, timeout=30, verify=False)
             r.raise_for_status()
 
             html = r.content.decode(encode, 'ignore')
