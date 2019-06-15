@@ -12,6 +12,8 @@ from chpackage.global_function import chrome_get_html_all_content, get_new_heade
 from chpackage import torndb
 from chpackage.param_info import get_param_info
 from chpackage.proc_proxy import chs_proxy
+from multiprocessing import Pool
+import traceback
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_INFO_FILE = "%s/%s" % (BASE_DIR, "Config.ini")
@@ -27,13 +29,24 @@ mysqlExe = torndb.Connection(
 
 chsp = chs_proxy(mysqlExe)
 
-def main():
 
-    proxyInfoList = chsp.get_proxy_list()
+def sing_verifi(proxyInfo):
 
-    for proxyInfo in proxyInfoList:
+    try:
         # print(proxyInfo)
-        isOk = chsp.verifi_proxy_ipip(proxyInfo)
+        n = 0
+        while n <= 3:
+            n += 1
+            isOk = chsp.verifi_proxy_webmasterhome(proxyInfo)
+            if isOk is True:
+                print("{0} {1} {2} 校验成功，返回IP为：{3}。".format(
+                    proxyInfo["type"],
+                    proxyInfo["ip"],
+                    proxyInfo["port"],
+                    isOk,
+                ))
+                return True
+
         if isOk is not True:
             print("{0} {1} {2} 校验失败，失败次数为：{4}，返回IP为：{3}。".format(
                 proxyInfo["type"],
@@ -42,18 +55,28 @@ def main():
                 isOk,
                 proxyInfo["weights"]
             ))
-            continue
 
-        print("{0} {1} {2} 校验成功，返回IP为：{3}。".format(
-            proxyInfo["type"],
-            proxyInfo["ip"],
-            proxyInfo["port"],
-            isOk,
-        ))
-
+            proxyInfo["is_ok"] = "N"
+            chsp.update_proxy_isok(proxyInfo)
+            return False
+    except Exception as e:
+        # traceback.print_exc()
+        print(e)
 
 
 
+def main():
+
+    proxyInfoList = chsp.get_proxy_list()
+
+    p = Pool(5)
+    for proxyInfo in proxyInfoList:
+
+        # sing_verifi(proxyInfo)
+        p.apply_async(sing_verifi, (proxyInfo,))
+
+    p.close()
+    p.join()    # behind close() or terminate()
 
 if __name__ == '__main__':
     main()

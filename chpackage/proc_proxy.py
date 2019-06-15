@@ -71,6 +71,20 @@ class chs_proxy(object):
             print(e)
             return False
 
+    def update_proxy_isok(self, proxyInfoDict):
+        try:
+            sqlStr = "update proxy_list set is_ok='{3}' where ip='{0}' and port='{1}' and type='{2}'".format(
+                proxyInfoDict["ip"],
+                proxyInfoDict["port"],
+                proxyInfoDict["type"],
+                proxyInfoDict["is_ok"],
+            )
+            self.mysqlExe.execute(sqlStr)
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
     def insert_proxy_info(self, proxyInfoDict):
         try:
             sqlStr = "INSERT INTO `v2PySql`.`proxy_list` (`country`, `ip`, `port`, `addr`, `type`,  `weights`, `is_ok`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '0', 'Y');".format(
